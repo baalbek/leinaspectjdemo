@@ -13,17 +13,16 @@
 		[log4j/log4j "1.2.17"]
 		[args4j/args4j "2.33"]
 		[org.aspectj/aspectjrt "1.8.9"]
-
     ]
-  ;:main ^:skip-aot harborview.webapp
-  ;:compile 
-  :target-path "target"
+  ;;; :main ^:skip-aot harborview.webapp
+  ;;; :prep-tasks [["compile" "leinaspectjdemo.calc"] "javac" "compile" ]
+  :target-path "build"
   :source-paths ["src/clojure"]
   :test-paths ["test/clojure" "dist" "test/resources"]
   :java-source-paths ["src/java" "test/java"]
   :javac-options     ["-target" "1.8" "-source" "1.8"]
   :aot :all
-  ;:test {:resource-paths ["test/resources" "dist"]}
+  ;;; :test {:resource-paths ["test/resources" "dist"]}
   :resource-paths [
 
                    ]
