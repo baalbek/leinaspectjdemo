@@ -1,0 +1,163 @@
+apply plugin: 'java'
+
+apply from: '/home/rcs/opt/java/gradlecommon/depversions.gradle'
+
+group = 'rcstadheim'
+
+configurations {
+    aspectjTask
+}
+
+sourceSets {
+    main {
+        java {
+            srcDir "src/java"
+        }
+        resources {
+            srcDir "src/resources"
+        }
+        output.classesDir = 'build/classes'
+    }
+    test {
+        java {
+            srcDir "test/java"
+        }
+        resources {
+            srcDir "test/resources"
+        }
+    }
+}
+
+ext {
+    myName = 'leinaspectjdemo'
+    myLibName = "${myName}.jar"
+}
+
+archivesBaseName = "$myName"
+
+sourceCompatibility = 1.8
+
+targetCompatibility = 1.8
+
+repositories {
+    mavenCentral()
+    maven {
+        url 'http://clojars.org/repo'
+    }
+}
+
+
+dependencies {
+    //------------------- spring -------------------
+    //compile "org.springframework:spring-core:$springVersion"
+    //compile "org.springframework:spring-context:$springVersion"
+    //compile "org.springframework:spring-aop:$springVersion"
+    //------------------- clojure-------------------
+    compile "org.clojure:clojure:$clojureVersion"
+    compile "org.clojure:clojure-contrib:$clojureContribVersion"
+    //------------------- diverse -------------------
+    //compile "junit:junit:$junitVersion"
+    compile "log4j:log4j:$log4jVersion"
+    compile "args4j:args4j:$arg4jVersion"
+    //------------------- Aspectj -------------------
+    runtime "org.aspectj:aspectjrt:$aspectjVersion"
+    aspectjTask "org.aspectj:aspectjweaver:$aspectjVersion"
+    aspectjTask "org.aspectj:aspectjtools:$aspectjVersion"
+}
+
+task common << {
+    println "$springVersion"
+}
+String clazzPath() {
+    /*
+    (configurations.runtime.files.collect { f ->
+        f.name
+    } << ".").join(" ")
+    << configurations.aspectjTask.files.collect { f ->
+        f.name
+    }
+    << ".").join(" ")
+    //*/
+
+    def runt = configurations.runtime.files.collect { f ->
+            f.name
+    }
+    def aopt = configurations.aspectjTask.files.collect { f ->
+        f.name
+    }
+    runt.remove("netfondsrepos-1.0.jar")
+
+    aopt.each {
+        runt.add(it)
+    }
+    runt.add(".")
+    runt.join(" ")
+}
+
+task printClazzPath << {
+    println clazzPath()
+}
+
+task printXx1 << {
+    configurations.runtime.files.collect { f ->
+        println f
+    }
+}
+task printXx2 << {
+    def aopcp = configurations.compile.files << configurations.aspectjTask.files
+    aopcp.each {
+        println it
+    }
+}
+
+task aopClazzPath << {
+    def r = configurations.aspectjTask.asPath //<< configurations.runtime.asPath 
+    r.each {
+        println it
+    }
+}
+
+jar {
+    manifest {
+        attributes 'Main-Class': "${myName}.App"
+        attributes 'Class-Path': clazzPath()
+    }
+    from ("target/classes") include "**/*.class"
+}
+
+ext.top = '/home/rcs/opt/java'
+ext.myHome = "$top/$myName"
+ext.classesHome = "$myHome/build/classes"
+ext.targetClassesHome = "$myHome/target/classes"
+ext.aspectHome = "$myHome/src/aspect"
+
+//compileJava.deleteAllActions()
+
+task copydeps(type: Copy) {
+    into 'dist' from configurations.runtime
+}
+
+task compileAop << {
+    def aopcp = configurations.compile.asPath << ":" << configurations.aspectjTask.asPath
+    ant.taskdef(resource: 'org/aspectj/tools/ant/taskdefs/aspectjTaskdefs.properties',
+            classpath: configurations.aspectjTask.asPath)
+    ant.iajc(inpath: classesHome,
+            source: '1.8',
+            target: '1.8',
+            destDir: targetClassesHome,
+            sourceRoots: aspectHome,
+            classpath: aopcp)
+}
+
+
+buildscript {
+    repositories {
+        mavenLocal()
+    }
+    dependencies {
+        classpath group: 'rcstadheim', name: 'palenque',
+                version: '1.0'
+    }
+}
+
+apply plugin: 'rcstadheim.palenque'
