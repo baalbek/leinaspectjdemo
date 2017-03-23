@@ -1,0 +1,11 @@
+#!/bin/bash
+
+gradle compileJava
+
+lein compile
+
+gradle compileAop
+
+gradle jar
+
+exit 0

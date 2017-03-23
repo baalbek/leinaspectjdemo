@@ -39,11 +39,11 @@ public privileged aspect CacheAspect implements Cacheable {
 
         String key = cacheKeyFactory.apply(thisJoinPoint);
         if (cachedMethods.containsKey(key)){
-            System.out.printf("[%s] Return cached result\n",hc);
+            System.out.printf("[%s] Return cached result: %s\n",hc, key);
             return cachedMethods.get(key);
         }
         else {
-            System.out.printf("[%s] Caching result\n",hc);
+            System.out.printf("[%s] Caching result: %s\n",hc, key);
             Object result = proceed();
 
             cachedMethods.put(key,result);
