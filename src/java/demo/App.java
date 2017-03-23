@@ -1,13 +1,13 @@
 package demo;
 
-import oahu.annotations.Cache;
-
 public class App {
-    
-    public 
 
     public static void main(String[] args) {
-        System.out.println("App");
+        Demo1 demo1 = new Demo1();
+        int result = demo1.calc1(343);
+        System.out.println("App: " + result);
+        result = demo1.calc1(343);
+        System.out.println("App 2: " + result);
     }
 
 }

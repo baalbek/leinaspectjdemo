@@ -49,9 +49,9 @@ repositories {
 
 dependencies {
     //------------------- spring -------------------
-    //compile "org.springframework:spring-core:$springVersion"
-    //compile "org.springframework:spring-context:$springVersion"
-    //compile "org.springframework:spring-aop:$springVersion"
+    compile "org.springframework:spring-core:$springVersion"
+    compile "org.springframework:spring-context:$springVersion"
+    compile "org.springframework:spring-aop:$springVersion"
     //------------------- clojure-------------------
     compile "org.clojure:clojure:$clojureVersion"
     compile "org.clojure:clojure-contrib:$clojureContribVersion"
@@ -59,7 +59,7 @@ dependencies {
     compile "log4j:log4j:$log4jVersion"
     compile "args4j:args4j:$arg4jVersion"
     //------------------- Aspectj -------------------
-    runtime "org.aspectj:aspectjrt:$aspectjVersion"
+    compile "org.aspectj:aspectjrt:$aspectjVersion"
     aspectjTask "org.aspectj:aspectjweaver:$aspectjVersion"
     aspectjTask "org.aspectj:aspectjtools:$aspectjVersion"
 }
@@ -118,7 +118,7 @@ task aopClazzPath << {
 
 jar {
     manifest {
-        attributes 'Main-Class': "${myName}.App"
+        attributes 'Main-Class': "demo.App"
         attributes 'Class-Path': clazzPath()
     }
     from ("target/classes") include "**/*.class"
@@ -128,7 +128,7 @@ ext.top = '/home/rcs/opt/java'
 ext.myHome = "$top/$myName"
 ext.classesHome = "$myHome/build/classes"
 ext.targetClassesHome = "$myHome/target/classes"
-ext.aspectHome = "$myHome/src/aspect"
+ext.aspectHome = "$myHome/src/aspects"
 
 //compileJava.deleteAllActions()
 
