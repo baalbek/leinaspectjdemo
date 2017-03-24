@@ -1,3 +1,7 @@
-(ns demo.calc)
+(ns demo.calc
+  (:gen-class))
 
-(defn calc1 [v] (* 2 v))
+(defn -main
+    [greetee]
+    (println (str "Hello " greetee "!")))
+

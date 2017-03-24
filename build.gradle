@@ -62,6 +62,14 @@ dependencies {
     compile "org.aspectj:aspectjrt:$aspectjVersion"
     aspectjTask "org.aspectj:aspectjweaver:$aspectjVersion"
     aspectjTask "org.aspectj:aspectjtools:$aspectjVersion"
+
+
+    //------------------- Web -------------------
+    compile "compojure:compojure:$compojureVersion"
+    compile "clj-json:clj-json:$jsonVersion"
+    compile "ring:ring-core:$ringVersion"
+    compile "ring:ring-jetty-adapter:$ringVersion"
+    compile "ring:ring-servlet:$ringVersion"
 }
 
 task common << {
@@ -118,7 +126,7 @@ task aopClazzPath << {
 
 jar {
     manifest {
-        attributes 'Main-Class': "demo.App"
+        attributes 'Main-Class': "demo.webapp"
         attributes 'Class-Path': clazzPath()
     }
     from ("target/classes") include "**/*.class"
